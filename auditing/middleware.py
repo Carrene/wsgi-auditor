@@ -1,5 +1,4 @@
-from . import AUDIT_LOG_KEY
-from .context import Context as AuditLogContext
+from .context import context as AuditLogContext
 
 
 class MiddleWare:
@@ -13,12 +12,9 @@ class MiddleWare:
     def _auditlog_middleware(self, wsgi_application):
 
         def wrapper(environ, start_response):
-
-            environ[AUDIT_LOG_KEY] = []
-
             def start_response_wrapper(status, headers):
                 AuditLogContext.append_request(environ, status)
-                self.callback(environ[AUDIT_LOG_KEY])
+                self.callback(AuditLogContext.audit_logs)
                 return start_response(status, headers)
 
             return wsgi_application(environ, start_response_wrapper)
