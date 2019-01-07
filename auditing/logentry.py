@@ -14,3 +14,12 @@ class RequestLogEntry(LogEntry):
         self.authorization = environ['HTTP_AUTHORIZATION'] \
             if 'HTTP_AUTHORIZATION' in environ else None
 
+
+class ChangeAttributeLogEntry(LogEntry):
+
+    def __init__(self, who, attribute, old_value, new_value):
+        self.who = who
+        self.attribute = attribute
+        self.old_value = old_value
+        self.new_value = new_value
+

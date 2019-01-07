@@ -1,7 +1,7 @@
 import threading
 
 from . import AUDIT_LOG_KEY
-from .logentry import RequestLogEntry
+from .logentry import RequestLogEntry, ChangeAttributeLogEntry
 
 
 class ContextIsNotInitializedError(Exception):
@@ -72,6 +72,20 @@ class Context:
     def append_request(self, environ, status):
         request_log_entry = RequestLogEntry(environ, status)
         self._audit_logs.append(request_log_entry)
+
+    def append_change_attribute(self, who, old_value, new_value):
+        differences = old_value.items() - new_value.items()
+        a = new_value.items() - old_value.items()
+
+        for i in differences:
+            attribute = i[0]
+            self._audit_logs.append(ChangeAttributeLogEntry(
+                who,
+                attribute,
+                old_value[attribute],
+                new_value[attribute]
+            ))
+
 
 
 class ContextProxy(Context):
