@@ -1,7 +1,7 @@
 from .context import context as AuditLogContext
 
 
-class MiddleWare:
+class MiddleWareFactory:
 
     def __init__(self, callback):
         self.callback = callback

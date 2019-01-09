@@ -1,7 +1,7 @@
 from bddrest import Given, status
 
 from auditing.context import Context as AuditLogContext
-from auditing.middleware import MiddleWare
+from auditing.middleware import MiddleWareFactory
 
 
 def wsgi_application(env, start_response):
@@ -22,7 +22,7 @@ class TestContext:
         def callback(audit_logs):
             self.log = audit_logs
 
-        middleware = MiddleWare(callback)
+        middleware = MiddleWareFactory(callback)
 
         app = middleware(wsgi_application)
         call = dict(

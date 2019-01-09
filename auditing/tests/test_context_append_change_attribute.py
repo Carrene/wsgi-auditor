@@ -2,7 +2,7 @@ from bddrest import Given, status, response
 import pytest
 
 from auditing.context import Context as AuditLogContext, context
-from auditing.middleware import MiddleWare
+from auditing.middleware import MiddleWareFactory
 from auditing.logentry import ChangeAttributeLogEntry
 
 
@@ -31,7 +31,7 @@ class TestContext:
         def callback(audit_logs):
             self.log = audit_logs
 
-        middleware = MiddleWare(callback)
+        middleware = MiddleWareFactory(callback)
         app = middleware(wsgi_application)
 
         call = dict(
