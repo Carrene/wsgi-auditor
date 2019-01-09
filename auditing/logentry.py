@@ -17,8 +17,9 @@ class RequestLogEntry(LogEntry):
 
 class ChangeAttributeLogEntry(LogEntry):
 
-    def __init__(self, who, attribute, old_value, new_value):
-        self.who = who
+    def __init__(self, user, obj, attribute, old_value, new_value):
+        self.user = user
+        self.obj = obj
         self.attribute = attribute
         self.old_value = old_value
         self.new_value = new_value

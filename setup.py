@@ -15,7 +15,7 @@ dependencies = [
 
 
 setup(
-    name='audit',
+    name='auditing',
     version=package_version,
     description='A ',
     long_description=open('README.md').read(),

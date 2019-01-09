@@ -19,8 +19,6 @@ class Context:
     #: Thread local variable contexts stored in
     thread_local = threading.local()
 
-    _audit_logs = []
-
     @property
     def __stack__(self):
         """Nested contexts stack
@@ -38,6 +36,7 @@ class Context:
         :param environ: WSGI environ dictionary
         """
         self.environ = environ
+        self._audit_logs = []
 
     def __enter__(self):
         # Backing up the current context
@@ -73,19 +72,16 @@ class Context:
         request_log_entry = RequestLogEntry(environ, status)
         self._audit_logs.append(request_log_entry)
 
-    def append_change_attribute(self, who, old_value, new_value):
-        differences = old_value.items() - new_value.items()
-        a = new_value.items() - old_value.items()
+    def append_change_attribute(self, user, obj, attribute, old_value, 
+                                new_value):
 
-        for i in differences:
-            attribute = i[0]
-            self._audit_logs.append(ChangeAttributeLogEntry(
-                who,
-                attribute,
-                old_value[attribute],
-                new_value[attribute]
-            ))
-
+        self._audit_logs.append(ChangeAttributeLogEntry(
+            user,
+            obj,
+            attribute,
+            old_value,
+            new_value
+        ))
 
 
 class ContextProxy(Context):

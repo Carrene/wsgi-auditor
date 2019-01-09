@@ -1,22 +1,24 @@
-from bddrest import Given, status
+from bddrest import Given, status, response
+import pytest
 
 from auditing.context import Context as AuditLogContext, context
 from auditing.middleware import MiddleWare
 from auditing.logentry import ChangeAttributeLogEntry
 
 
+class ModelObject:
+
+    def __init__(self, a):
+        self.a = a
+
+
 def wsgi_application(env, start_response):
     with AuditLogContext(env):
-        old = dict(a=1, b=2, c=3)
-        new = dict(a=1, b=2, c=4, d=None)
 
-        context.append_change_attribute('anonymous', old, new)
+        obj = ModelObject(a=1)
+        context.append_change_attribute('anonymous', obj, 'a', 1, 11)
 
-        start_response(
-            '200 OK',
-            [('content-type', 'text/plain;charset=utf-8')]
-        )
-
+        start_response('200 OK', [('content-type', 'text/plain;charset=utf-8')])
         return [b'Index']
 
 
@@ -30,18 +32,14 @@ class TestContext:
             self.log = audit_logs
 
         middleware = MiddleWare(callback)
-
         app = middleware(wsgi_application)
+
         call = dict(
-            title='Testing the append request method',
-            url='/apiv1/device',
+            title='Testing the append change attribute method',
+            url='/apiv1',
             verb=self.verb,
         )
         with Given(app, **call):
             assert status == 200
-
-            assert self.log[0].verb == self.verb
-            assert self.log[0].status == '200 OK'
-            assert self.log[0].query_string is None
-            assert self.log[0].authorization is None
+            assert len(self.log) == 2
 
