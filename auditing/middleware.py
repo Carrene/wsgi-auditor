@@ -1,4 +1,6 @@
-from .context import context as AuditLogContext
+import sys
+
+from .context import context as AuditLogContext, Context
 
 
 class MiddleWareFactory:
@@ -12,12 +14,16 @@ class MiddleWareFactory:
     def _auditlog_middleware(self, wsgi_application):
 
         def wrapper(environ, start_response):
-            def start_response_wrapper(status, headers):
-                AuditLogContext.append_request(environ, status)
-                self.callback(AuditLogContext.audit_logs)
-                return start_response(status, headers)
 
-            return wsgi_application(environ, start_response_wrapper)
+            with Context(environ):
+
+                def start_response_wrapper(status, headers, exc_info=None):
+
+                    AuditLogContext.append_request(environ, status)
+                    self.callback(AuditLogContext.audit_logs)
+                    result = start_response(status, headers)
+
+                return wsgi_application(environ, start_response_wrapper)
 
         return wrapper
 
