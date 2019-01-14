@@ -1,7 +1,9 @@
 import threading
 
-from . import AUDIT_LOG_KEY
 from .logentry import RequestLogEntry, ChangeAttributeLogEntry
+
+
+AUDIT_LOG_KEY = 'AUDIT_LOG'
 
 
 class ContextIsNotInitializedError(Exception):
@@ -72,7 +74,7 @@ class Context:
         request_log_entry = RequestLogEntry(environ, status)
         self._audit_logs.append(request_log_entry)
 
-    def append_change_attribute(self, user, obj, attribute, old_value, 
+    def append_change_attribute(self, user, obj, attribute, old_value,
                                 new_value):
 
         self._audit_logs.append(ChangeAttributeLogEntry(
