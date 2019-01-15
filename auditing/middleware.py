@@ -1,29 +1,28 @@
-import sys
-
 from .context import context as AuditLogContext, Context
 
 
-class MiddleWareFactory:
+class MiddleWare:
 
-    def __init__(self, callback):
+    def __init__(self, wsgi_application, callback):
+        self.underlying_application = wsgi_application
         self.callback = callback
 
-    def __call__(self, wsgi_application):
-        return self._auditlog_middleware(wsgi_application)
+    def __call__(self, environ, start_response):
+        with Context(environ):
 
-    def _auditlog_middleware(self, wsgi_application):
+            def start_response_wrapper(status, headers, exc_info=None):
 
-        def wrapper(environ, start_response):
+                AuditLogContext.append_request(environ, status)
+                self.callback(AuditLogContext.audit_logs)
+                result = start_response(status, headers)
 
-            with Context(environ):
+            return self.underlying_application(environ, start_response_wrapper)
 
-                def start_response_wrapper(status, headers, exc_info=None):
 
-                    AuditLogContext.append_request(environ, status)
-                    self.callback(AuditLogContext.audit_logs)
-                    result = start_response(status, headers)
+    def __getattribute__(self, name):
+        try:
+            return super().__getattribute__(name)
 
-                return wsgi_application(environ, start_response_wrapper)
-
-        return wrapper
+        except AttributeError:
+            return self.underlying_application.__getattribute__(name)
 
