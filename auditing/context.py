@@ -22,6 +22,13 @@ class Context:
     #: Thread local variable contexts stored in
     thread_local = threading.local()
 
+    def __call__(self, f):
+        def wrapper(*args, **kw):
+            with self:
+                return f(*args, **kw)
+
+        return wrapper
+
     @property
     def __stack__(self):
         """Nested contexts stack
