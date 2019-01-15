@@ -24,3 +24,10 @@ class ChangeAttributeLogEntry(LogEntry):
         self.old_value = old_value
         self.new_value = new_value
 
+
+class InstantiationLogEntry(LogEntry):
+
+    def __init__(self, user, obj):
+        self.user = user
+        self.obj = obj
+

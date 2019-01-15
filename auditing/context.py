@@ -1,6 +1,7 @@
 import threading
 
-from .logentry import RequestLogEntry, ChangeAttributeLogEntry
+from .logentry import RequestLogEntry, ChangeAttributeLogEntry, \
+    InstantiationLogEntry
 
 
 AUDIT_LOG_KEY = 'AUDIT_LOG'
@@ -84,6 +85,9 @@ class Context:
             old_value,
             new_value
         ))
+
+    def append_instantiation(self, user, obj):
+        self._audit_logs.append(InstantiationLogEntry(user, obj))
 
 
 class ContextProxy(Context):
