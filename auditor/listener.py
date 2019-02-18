@@ -44,19 +44,21 @@ def set_handler(target, value, oldvalue, initiator):
 
 
 def append_handler(target, value, initiator):
-    AuditLogContext.append(
-        user=context.identity.email,
-        obj=target,
-        attribute=initiator.key,
-        value=value.title,
-    )
+    if target in DBSession:
+        AuditLogContext.append(
+            user=context.identity.email,
+            obj=target,
+            attribute=initiator.key,
+            value=value.title,
+        )
 
 
 def remove_handler(target, value, initiator):
-    AuditLogContext.remove(
-        user=context.identity.email,
-        obj=target,
-        attribute=initiator.key,
-        value=value.title,
-    )
+    if target in DBSession:
+        AuditLogContext.remove(
+            user=context.identity.email,
+            obj=target,
+            attribute=initiator.key,
+            value=value.title,
+        )
 
