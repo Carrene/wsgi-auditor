@@ -4,18 +4,20 @@ from setuptools import setup, find_packages
 
 
 # reading package version (without loading it)
-with open(join(dirname(__file__), 'auditing', '__init__.py')) as v_file:
+with open(join(dirname(__file__), 'auditor', '__init__.py')) as v_file:
     package_version = re.compile(r".*__version__ = '(.*?)'", re.S)\
         .match(v_file.read()).group(1)
 
 
 dependencies = [
+    'sqlalchemy',
     'bddrest',
+    'restfulpy >= 2.7.1',
 ]
 
 
 setup(
-    name='auditing',
+    name='auditor',
     version=package_version,
     description='A ',
     long_description=open('README.md').read(),
