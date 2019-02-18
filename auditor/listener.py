@@ -8,7 +8,7 @@ from . import context as AuditLogContext
 
 def observe(model, exclude=None):
 
-    listen(model, 'after_insert', after_insert, propagate=True)
+    listen(model, 'after_insert', after_insert_handler, propagate=True)
 
     for column in model.iter_columns():
         if hasattr(column, 'property') and \
@@ -19,10 +19,10 @@ def observe(model, exclude=None):
         elif hasattr(column, 'property') and \
             isinstance(column.property, ColumnProperty) and \
             column.key not in exclude:
-                listen(column, 'set', change_attribute, propagate=True)
+                listen(column, 'set', set_handler, propagate=True)
 
 
-def after_insert(mapper, connection, target):
+def after_insert_handler(mapper, connection, target):
     try:
         email = context.identity.email
 
@@ -32,7 +32,7 @@ def after_insert(mapper, connection, target):
     AuditLogContext.append_instantiation(user=email, obj=target)
 
 
-def change_attribute(target, value, oldvalue, initiator):
+def set_handler(target, value, oldvalue, initiator):
     if target in DBSession and value != oldvalue:
         AuditLogContext.append_change_attribute(
             user=context.identity.email,
