@@ -31,3 +31,21 @@ class InstantiationLogEntry(LogEntry):
         self.user = user
         self.obj = obj
 
+
+class AppendLogEntry(LogEntry):
+
+    def __init__(self, user, obj, attribute, value):
+        self.user = user
+        self.obj = obj
+        self.attribute = attribute
+        self.value = value
+
+
+class RemoveLogEntry(LogEntry):
+
+    def __init__(self, user, obj, attribute, value):
+        self.user = user
+        self.obj = obj
+        self.attribute = attribute
+        self.value = value
+

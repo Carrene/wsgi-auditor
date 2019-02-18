@@ -1,7 +1,7 @@
 from bddrest import Given, status
 
-from auditing.context import Context as AuditLogContext
-from auditing.middleware import MiddleWareFactory
+from auditor.context import Context as AuditLogContext
+from auditor.middleware import MiddleWareFactory
 
 
 def wsgi_application(env, start_response):
