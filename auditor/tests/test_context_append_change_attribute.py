@@ -1,9 +1,9 @@
 from bddrest import Given, status, response
 import pytest
 
-from auditing.context import Context as AuditLogContext, context
-from auditing.middleware import MiddleWareFactory
-from auditing.logentry import ChangeAttributeLogEntry
+from auditor.context import Context as AuditLogContext, context
+from auditor.middleware import MiddleWareFactory
+from auditor.logentry import ChangeAttributeLogEntry
 
 
 class ModelObject:
