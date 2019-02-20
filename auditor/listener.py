@@ -29,14 +29,14 @@ def after_insert_handler(mapper, connection, target):
     except:
         email = 'anonymous'
 
-    AuditLogContext.append_instantiation(user=email, obj=target)
+    AuditLogContext.append_instantiation(user=email, object_=target)
 
 
 def set_handler(target, value, oldvalue, initiator):
     if target in DBSession and value != oldvalue:
         AuditLogContext.append_change_attribute(
             user=context.identity.email,
-            obj=target,
+            object_=target,
             attribute=initiator.key,
             old_value=oldvalue,
             new_value=value,
@@ -47,7 +47,7 @@ def append_handler(target, value, initiator):
     if target in DBSession:
         AuditLogContext.append(
             user=context.identity.email,
-            obj=target,
+            object_=target,
             attribute=initiator.key,
             value=value.title,
         )
@@ -57,7 +57,7 @@ def remove_handler(target, value, initiator):
     if target in DBSession:
         AuditLogContext.remove(
             user=context.identity.email,
-            obj=target,
+            object_=target,
             attribute=initiator.key,
             value=value.title,
         )
