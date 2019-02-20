@@ -82,34 +82,34 @@ class Context:
         request_log_entry = RequestLogEntry(environ, status)
         self._audit_logs.append(request_log_entry)
 
-    def append_change_attribute(self, user, obj, attribute, old_value,
+    def append_change_attribute(self, user, object_, attribute, old_value,
                                 new_value):
 
         self._audit_logs.append(ChangeAttributeLogEntry(
             user,
-            obj,
+            object_,
             attribute,
             old_value,
             new_value
         ))
 
-    def append_instantiation(self, user, obj):
-        self._audit_logs.append(InstantiationLogEntry(user, obj))
+    def append_instantiation(self, user, object_):
+        self._audit_logs.append(InstantiationLogEntry(user, object_))
 
-    def append(self, user, obj, attribute, value):
+    def append(self, user, object_, attribute, value):
 
         self._audit_logs.append(AppendLogEntry(
             user,
-            obj,
+            object_,
             attribute,
             value,
         ))
 
-    def remove(self, user, obj, attribute, value):
+    def remove(self, user, object_, attribute, value):
 
         self._audit_logs.append(RemoveLogEntry(
             user,
-            obj,
+            object_,
             attribute,
             value,
         ))
