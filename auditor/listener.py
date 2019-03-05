@@ -1,6 +1,7 @@
 from sqlalchemy.event import listen
 from sqlalchemy.orm import RelationshipProperty, ColumnProperty
 from restfulpy.orm import DBSession
+from restfulpy.utils import to_camel_case
 from nanohttp import context
 
 from . import context as AuditLogContext
@@ -34,10 +35,14 @@ def after_insert_handler(mapper, connection, target):
 
 def set_handler(target, value, oldvalue, initiator):
     if target in DBSession and value != oldvalue:
+        target_key = to_camel_case(initiator.key)
+        target_label = target.json_metadata()['fields'][target_key]['label']
+
         AuditLogContext.append_change_attribute(
             user=context.identity.email,
             object_=target,
-            attribute=initiator.key,
+            attribute_key=target_key,
+            attribute_label=target_label,
             old_value=oldvalue,
             new_value=value,
         )
@@ -45,20 +50,28 @@ def set_handler(target, value, oldvalue, initiator):
 
 def append_handler(target, value, initiator):
     if target in DBSession:
+        target_key = to_camel_case(initiator.key)
+        target_label = target.json_metadata()['fields'][target_key]['label']
+
         AuditLogContext.append(
             user=context.identity.email,
             object_=target,
-            attribute=initiator.key,
+            attribute_key=target_key,
+            attribute_label=target_label,
             value=value.title,
         )
 
 
 def remove_handler(target, value, initiator):
     if target in DBSession:
+        target_key = to_camel_case(initiator.key)
+        target_label = target.json_metadata()['fields'][target_key]['label']
+
         AuditLogContext.remove(
             user=context.identity.email,
             object_=target,
-            attribute=initiator.key,
+            attribute_key=target_key,
+            attribute_label=target_label,
             value=value.title,
         )
 
