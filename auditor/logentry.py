@@ -17,10 +17,12 @@ class RequestLogEntry(LogEntry):
 
 class ChangeAttributeLogEntry(LogEntry):
 
-    def __init__(self, user, object_, attribute, old_value, new_value):
+    def __init__(self, user, object_, attribute_key, attribute_label,
+                 old_value, new_value):
         self.user = user
         self.object_ = object_
-        self.attribute = attribute
+        self.attribute_key = attribute_key
+        self.attribute_label = attribute_label
         self.old_value = old_value
         self.new_value = new_value
 
@@ -34,18 +36,20 @@ class InstantiationLogEntry(LogEntry):
 
 class AppendLogEntry(LogEntry):
 
-    def __init__(self, user, object_, attribute, value):
+    def __init__(self, user, object_, attribute_key, attribute_label, value):
         self.user = user
         self.object_ = object_
-        self.attribute = attribute
+        self.attribute_key = attribute_key
+        self.attribute_label = attribute_label
         self.value = value
 
 
 class RemoveLogEntry(LogEntry):
 
-    def __init__(self, user, object_, attribute, value):
+    def __init__(self, user, object_, attribute_key, attribute_label, value):
         self.user = user
         self.object_ = object_
-        self.attribute = attribute
+        self.attribute_key = attribute_key
+        self.attribute_label = attribute_label
         self.value = value
 
