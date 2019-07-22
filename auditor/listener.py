@@ -1,7 +1,7 @@
 from sqlalchemy.event import listen
 from sqlalchemy.orm import RelationshipProperty, ColumnProperty
 from restfulpy.orm import DBSession
-from restfulpy.utils import to_camel_case
+from restfulpy.helpers import to_camel_case
 from nanohttp import context
 
 from . import context as AuditLogContext
