@@ -12,7 +12,7 @@ with open(join(dirname(__file__), 'auditor', '__init__.py')) as v_file:
 dependencies = [
     'sqlalchemy',
     'bddrest',
-    'restfulpy >= 2.7.1',
+    'restfulpy >= 3.4.0',
 ]
 
 
