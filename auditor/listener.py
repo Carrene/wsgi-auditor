@@ -13,7 +13,8 @@ def observe(model, exclude=None):
 
     for column in model.iter_columns():
         if hasattr(column, 'property') and \
-            isinstance(column.property, RelationshipProperty):
+            isinstance(column.property, RelationshipProperty) and \
+            column.key not in exclude:
                 listen(column, 'append', append_handler)
                 listen(column, 'remove', remove_handler)
 
